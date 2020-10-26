@@ -6,13 +6,14 @@ User = get_user_model()
 
 class Collection(models.Model):
     title = models.CharField(max_length=30) 
-    attribute1 = models.CharField(max_length = 15)
-    attribute2 = models.CharField(max_length = 15)
-    attribute3 = models.CharField(max_length = 15)
-    attribute4 = models.CharField(max_length = 15)
-    attribute5 = models.CharField(max_length = 15)
+    attribute1 = models.CharField(max_length = 15,blank=True, null=True)
+    attribute2 = models.CharField(max_length = 15,blank=True, null=True)
+    attribute3 = models.CharField(max_length = 15,blank=True, null=True)
+    attribute4 = models.CharField(max_length = 15,blank=True, null=True)
+    attribute5 = models.CharField(max_length = 15,blank=True, null=True)
     archived = models.BooleanField()
-    date_created = models.DateTimeField(auto_now_add=True) 
+    date_created = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(
         User,
         on_delete = models.CASCADE,
@@ -27,11 +28,12 @@ class Item(models.Model):
     name = models.CharField(max_length= 30)
     is_active = models.BooleanField()
     date_created = models.DateTimeField(auto_now_add=True)
-    attribute1 = models.CharField(max_length = 15)
-    attribute2 = models.CharField(max_length = 15)
-    attribute3 = models.CharField(max_length = 15)
-    attribute4 = models.CharField(max_length = 15)
-    attribute5 = models.CharField(max_length = 15)
+    last_updated = models.DateTimeField(auto_now=True)
+    attribute1 = models.CharField(max_length = 15,blank=True, null=True)
+    attribute2 = models.CharField(max_length = 15,blank=True, null=True)
+    attribute3 = models.CharField(max_length = 15,blank=True, null=True)
+    attribute4 = models.CharField(max_length = 15,blank=True, null=True)
+    attribute5 = models.CharField(max_length = 15,blank=True, null=True)
     notes = models.TextField(max_length = 100)
     collection = models.ForeignKey(
         Collection,
