@@ -18,6 +18,9 @@ class Collection(models.Model):
         on_delete = models.CASCADE,
         related_name = 'owner_collections',
     )
+
+    def __str__(self):
+        return self.title
     
 
 class Item(models.Model):
@@ -35,8 +38,8 @@ class Item(models.Model):
         on_delete = models.CASCADE,
         related_name = 'collection_items'
     )
-    image = models.URLField()
-    ranking = models.IntegerField()
+    image = models.URLField(blank=True)
+    ranking = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(
         User,
         on_delete = models.CASCADE,
