@@ -1,10 +1,12 @@
 from rest_framework import generics, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Collection
+from .permissions import IsOwner
+from .models import Collection, Item
 from .serialisers import (
     CollectionSerialiser,
     CollectionDetailSerialiser,
+    ItemSerialiser,
                         )
 
 class CollectionsList(generics.ListCreateAPIView):
@@ -12,8 +14,11 @@ class CollectionsList(generics.ListCreateAPIView):
     Shows all collections that aren't archived
     url: collections/ 
     """
-    queryset = Collection.objects.filter(archived=False)
     serializer_class = CollectionSerialiser
+    permission_classes = [IsOwner,]
+
+    def get_queryset(self):
+        return Collection.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -25,12 +30,14 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Collection.objects.all()
     serializer_class = CollectionDetailSerialiser
+    permission_classes = [IsOwner,]
 
 
 class CollectionToggleArchive(APIView):
     "archive or unarchive collection"
 
     queryset = Collection.objects.all()
+    permission_classes = [IsOwner,]
 
     def get_object(self, pk):
         try:
@@ -50,3 +57,27 @@ class CollectionToggleArchive(APIView):
             response = "collection archived"
         collection.save()
         return Response({'status': response})
+
+
+class ItemsList(generics.ListCreateAPIView):
+    """ 
+    Shows all lists that aren't archived
+    url: items/ 
+    """
+    serializer_class = ItemSerialiser
+    permission_classes = [IsOwner,]
+
+    def get_queryset(self):
+        return Item.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class ItemDetail(generics.RetrieveUpdateDestroyAPIView):
+    """ 
+    url: item/<int:pk>/
+    """
+    queryset = Item.objects.all()
+    serializer_class = ItemSerialiser
+    permission_classes = [IsOwner,]
