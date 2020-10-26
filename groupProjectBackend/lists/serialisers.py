@@ -22,9 +22,3 @@ class CollectionDetailSerialiser(CollectionSerialiser):
     collection_items = ItemSerialiser(many=True, read_only=True)
 
 
-# class ProjectPublishSerialiser(serializers.ModelSerializer):
-
-#     class Meta:
-#         model = Project
-#         fields = "pub_date"
-
