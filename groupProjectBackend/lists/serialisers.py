@@ -9,6 +9,7 @@ class CollectionSerialiser(serializers.ModelSerializer):
         model = Collection
         fields = '__all__'
 
+
 class ItemSerialiser(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     date_created = serializers.ReadOnlyField()
