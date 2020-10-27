@@ -3,14 +3,18 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import CustomUser
-from .serializers import CustomUserSerializer
+from .serializers import CustomUserSerializer, CustomUserSerialiser
 from rest_framework import permissions, status
 from .permissions import OwnProfile
+from django.contrib.auth import get_user_model
+from rest_framework import generics
+
+User = get_user_model()
 
 # Create your views here.
 class CustomUserList(APIView):
     def get(self, request):
-        users = CustomUser.objects.all()
+        users = User.objects.all()
         serializer = CustomUserSerializer(users, many=True)
         return Response(serializer.data)
     def post(self, request):
@@ -28,7 +32,7 @@ class CustomUserDetail(APIView):
     
     def get_object(self, username):
         try:
-            return CustomUser.objects.get(username=username)
+            return User.objects.get(username=username)
         except CustomUser.DoesNotExist:
             raise Http404
     def get(self, request, username):
@@ -61,3 +65,16 @@ class CustomUserDetail(APIView):
         self.check_object_permissions(request, user)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+#register uses a serialiser that only requires two (or three) fields. The update profile will have more fields.
+class UserCreate(generics.CreateAPIView):
+    """ url: users/register/ """
+    queryset = User.objects.all()
+    serializer_class = CustomUserSerialiser
+
+
+class UzerCreate(generics.CreateAPIView):
+    """ url: users/register/ """
+    queryset = User.objects.all()
+    serializer_class = CustomUserSerializer
