@@ -3,7 +3,7 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import CustomUser
-from .serializers import CustomUserSerializer, CustomUserSerialiser
+from .serializers import CustomUserSerializer
 from rest_framework import permissions, status
 from .permissions import OwnProfile
 from django.contrib.auth import get_user_model
@@ -18,8 +18,8 @@ User = get_user_model()
 
 # Create your views here.
 class CustomUserList(APIView):
-    # serializer_class = CustomUserSerializer
-    # renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    serializer_class = CustomUserSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
     def get(self, request):
         users = User.objects.all()
         serializer = CustomUserSerializer(users, many=True)
@@ -72,16 +72,5 @@ class CustomUserDetail(APIView):
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
-class UserCreate(generics.CreateAPIView):
-    """ url: users/register/ """
-    queryset = User.objects.all()
-    serializer_class = CustomUserSerialiser
-
-
-class UzerCreate(generics.CreateAPIView):
-    """ url: users/register/ """
-    queryset = User.objects.all()
-    serializer_class = CustomUserSerializer
 
 
