@@ -18,8 +18,8 @@ User = get_user_model()
 
 # Create your views here.
 class CustomUserList(APIView):
-    serializer_class = CustomUserSerializer
-    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
+    # serializer_class = CustomUserSerializer
+    # renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
     def get(self, request):
         users = User.objects.all()
         serializer = CustomUserSerializer(users, many=True)
@@ -30,7 +30,6 @@ class CustomUserList(APIView):
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class CustomUserDetail(APIView):
@@ -74,7 +73,6 @@ class CustomUserDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-#register uses a serialiser that only requires two (or three) fields. The update profile will have more fields.
 class UserCreate(generics.CreateAPIView):
     """ url: users/register/ """
     queryset = User.objects.all()
