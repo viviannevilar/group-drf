@@ -8,11 +8,18 @@ from rest_framework import permissions, status
 from .permissions import OwnProfile
 from django.contrib.auth import get_user_model
 from rest_framework import generics
+from rest_framework.renderers import (
+                                        HTMLFormRenderer, 
+                                        JSONRenderer, 
+                                        BrowsableAPIRenderer,
+                                    )
 
 User = get_user_model()
 
 # Create your views here.
 class CustomUserList(APIView):
+    serializer_class = CustomUserSerializer
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
     def get(self, request):
         users = User.objects.all()
         serializer = CustomUserSerializer(users, many=True)
@@ -78,3 +85,5 @@ class UzerCreate(generics.CreateAPIView):
     """ url: users/register/ """
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
+
+
