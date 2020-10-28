@@ -11,7 +11,7 @@ class Collection(models.Model):
     attribute3 = models.CharField(max_length = 15,blank=True, null=True)
     attribute4 = models.CharField(max_length = 15,blank=True, null=True)
     attribute5 = models.CharField(max_length = 15,blank=True, null=True)
-    archived = models.BooleanField()
+    is_active = models.BooleanField()
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(
