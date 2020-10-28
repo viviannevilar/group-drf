@@ -3,7 +3,7 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import CustomUser
-from .serializers import CustomUserSerializer
+from .serializers import CustomUserSerializer, CustomUserSerialiser
 from rest_framework import permissions, status
 from .permissions import OwnProfile
 from django.contrib.auth import get_user_model
@@ -73,4 +73,7 @@ class CustomUserDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-
+class UserCreate(generics.CreateAPIView):
+    """ url: users/register/ """
+    queryset = User.objects.all()
+    serializer_class = CustomUserSerialiser

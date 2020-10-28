@@ -30,3 +30,21 @@ class CustomUserSerializer(serializers.ModelSerializer):
             instance.password = validated_data.get('password', instance.password)
             instance.save()
             return instance
+
+
+#this is the one being used to create users
+class CustomUserSerialiser(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password','preferred_name')
+        lookup_field = 'username'
+
+        # These fields are only editable (not displayed) and have to be a part of 'fields' tuple
+        extra_kwargs = {'password': {'write_only': True, 'min_length': 4}}
+
+    def create(self, validated_data):
+        user = super(CustomUserSerialiser, self).create(validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
