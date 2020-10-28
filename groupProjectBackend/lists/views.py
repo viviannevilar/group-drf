@@ -34,7 +34,7 @@ class CollectionsArchiveList(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsOwner, ]
 
     def get_queryset(self):
-        return Collection.objects.filter(user=self.request.user, archived=True)
+        return Collection.objects.filter(user=self.request.user, is_active=False)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -49,7 +49,7 @@ class CollectionsActiveList(generics.ListAPIView):
     permission_classes = [IsAuthenticated, IsOwner, ]
 
     def get_queryset(self):
-        return Collection.objects.filter(user=self.request.user, archived=False)
+        return Collection.objects.filter(user=self.request.user, is_active=True)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -80,11 +80,11 @@ class CollectionToggleArchive(APIView):
         collection = self.get_object(pk)
         self.check_object_permissions(request, collection)        
         data = request.data
-        if collection.archived == True:
-            collection.archived = False
+        if collection.is_active == True:
+            collection.is_active = False
             response = "collection unarchived!"
         else:
-            collection.archived = True
+            collection.is_active = True
             response = "collection archived"
         collection.save()
         return Response({'status': response})
