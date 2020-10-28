@@ -1,0 +1,54 @@
+[
+    {
+        "id": 1,
+        "user": "viviannevilar",
+        "date_created": "2020-10-27T03:40:23.157263Z",
+        "last_updated": "2020-10-27T03:40:23.157289Z",
+        "title": "Horses",
+        "attribute1": "weight",
+        "attribute2": "height",
+        "attribute3": "breed",
+        "attribute4": "age",
+        "attribute5": "colour",
+        "archived": false
+    },
+    {
+        "id": 2,
+        "user": "viviannevilar",
+        "date_created": "2020-10-27T03:40:52.557132Z",
+        "last_updated": "2020-10-27T03:40:52.557155Z",
+        "title": "Fridges",
+        "attribute1": "colour",
+        "attribute2": "price",
+        "attribute3": "height",
+        "attribute4": "weight",
+        "attribute5": "depth",
+        "archived": false
+    },
+    {
+        "id": 3,
+        "user": "viviannevilar",
+        "date_created": "2020-10-27T03:41:42.279753Z",
+        "last_updated": "2020-10-27T03:41:42.279779Z",
+        "title": "Car",
+        "attribute1": "make",
+        "attribute2": "model",
+        "attribute3": "year",
+        "attribute4": "colour",
+        "attribute5": "price",
+        "archived": false
+    },
+    {
+        "id": 5,
+        "user": "viviannevilar",
+        "date_created": "2020-10-27T03:49:27.862209Z",
+        "last_updated": "2020-10-27T03:49:27.862236Z",
+        "title": "Keyboard",
+        "attribute1": "price",
+        "attribute2": "colour",
+        "attribute3": "brand",
+        "attribute4": null,
+        "attribute5": null,
+        "archived": true
+    }
+]
