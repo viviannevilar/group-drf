@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_rest_passwordreset',
     'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -159,3 +160,4 @@ DATABASES['default'].update(db_from_env)
 
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
