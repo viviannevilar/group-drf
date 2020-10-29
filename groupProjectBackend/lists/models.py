@@ -40,7 +40,7 @@ class Item(models.Model):
         on_delete = models.CASCADE,
         related_name = 'collection_items'
     )
-    image = models.URLField(blank=True)
+    image = models.ImageField(blank=True, null=True)
     ranking = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(
         User,
