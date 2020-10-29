@@ -34,7 +34,7 @@ class Item(models.Model):
     attribute3 = models.CharField(max_length = 15,blank=True, null=True)
     attribute4 = models.CharField(max_length = 15,blank=True, null=True)
     attribute5 = models.CharField(max_length = 15,blank=True, null=True)
-    notes = models.TextField(max_length = 100)
+    notes = models.TextField(max_length = 100, blank=True)
     collection = models.ForeignKey(
         Collection,
         on_delete = models.CASCADE,
