@@ -1,8 +1,14 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+import uuid
+from datetime import datetime
 
 # Create your models here.
 User = get_user_model()
+
+
+
+
 
 class Collection(models.Model):
     title = models.CharField(max_length=30) 
@@ -24,7 +30,14 @@ class Collection(models.Model):
         return self.title
     
 
+
+    
+
 class Item(models.Model):
+    def upload_image_to():        
+        u = uuid.uuid4()
+        return'posts/%s/%s' % (datetime.now().strftime("%Y%m%d"), u.hex) 
+
     name = models.CharField(max_length= 30)
     is_active = models.BooleanField()
     date_created = models.DateTimeField(auto_now_add=True)
@@ -40,7 +53,7 @@ class Item(models.Model):
         on_delete = models.CASCADE,
         related_name = 'collection_items'
     )
-    image = models.ImageField(blank=True, null=True)
+    image = models.ImageField(upload_to=upload_image_to() ,blank=True, null=True)
     ranking = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(
         User,
