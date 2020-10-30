@@ -9,6 +9,8 @@ from .serialisers import (
     CollectionDetailSerialiser,
     ItemSerialiser,
                         )
+from django.core.signing import BadSignature
+from django.http import Http404
 
 class CollectionsList(generics.ListCreateAPIView):
     """ 
@@ -23,6 +25,20 @@ class CollectionsList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+class CollectionSafe(APIView):
+
+    def get_object(self, signed_pk):
+        try:
+            pk = Collection.signer.unsign(signed_pk)
+            return Collection.objects.get(pk=pk)
+        except (BadSignature, Collection.DoesNotExist):
+            raise Http404('No collection matches the given query')
+    
+    def get(self, request, signed_pk):
+        collection = self.get_object(signed_pk)
+        serializer = CollectionDetailSerialiser(collection)
+        return Response(serializer.data)
 
 
 class CollectionsArchiveList(generics.ListAPIView):
