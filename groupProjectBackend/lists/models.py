@@ -23,13 +23,9 @@ class Collection(models.Model):
     )
     signer = Signer(sep='/', salt='collection')
 
+    @property
     def signed_pk(self):
         return self.signer.sign(self.pk)
-        
-    # def get_absolute_url(self):
-    #     signed_pk = self.signer.sign(self.pk)
-    #     return f"/{self.signed_pk}/"
-    #     #reverse('collection', kwargs={'signed_pk': signed_pk})
 
     def __str__(self):
         return self.title

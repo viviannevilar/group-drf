@@ -5,6 +5,7 @@ class CollectionSerialiser(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     date_created = serializers.ReadOnlyField()
     last_updated = serializers.ReadOnlyField()
+    signed_pk = serializers.ReadOnlyField()
 
     class Meta:
         model = Collection
