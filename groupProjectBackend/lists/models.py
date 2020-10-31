@@ -42,9 +42,9 @@ class Collection(models.Model):
 class Item(models.Model):
     def upload_image_to(instance, filename):   
         filename_base, filename_ext = os.path.splitext(filename)        
-        print(os.path.splitext(filename))            
         u = uuid.uuid4()
-        return'posts/%s/%s' % (datetime.now().strftime("%Y%m%d"), u.hex) 
+        #datetime.now().strftime("%Y%m%d")
+        return'uploads/%s_%s' % (filename_base, u.hex) 
 
     name = models.CharField(max_length= 30)
     is_active = models.BooleanField()
@@ -61,6 +61,9 @@ class Item(models.Model):
         on_delete = models.CASCADE,
         related_name = 'collection_items'
     )
+
+    # image = models.ImageField(upload_to="uploads/", editable=True, blank=True, null=True)
+
     image = models.ImageField(upload_to=upload_image_to, editable=True, blank=True, null=True)
     ranking = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(
