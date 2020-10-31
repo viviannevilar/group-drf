@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth import get_user_model
 import uuid
 from datetime import datetime
+from django.core.signing import Signer
+from django.urls import reverse
 
 # Create your models here.
 User = get_user_model()
@@ -25,6 +27,11 @@ class Collection(models.Model):
         on_delete = models.CASCADE,
         related_name = 'owner_collections',
     )
+    signer = Signer(sep='/', salt='collection')
+
+    @property
+    def signed_pk(self):
+        return self.signer.sign(self.pk)
 
     def __str__(self):
         return self.title
