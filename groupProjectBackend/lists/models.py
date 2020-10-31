@@ -10,9 +10,6 @@ import os
 User = get_user_model()
 
 
-
-
-
 class Collection(models.Model):
     title = models.CharField(max_length=30) 
     attribute1 = models.CharField(max_length = 15,blank=True, null=True)
@@ -38,7 +35,6 @@ class Collection(models.Model):
         return self.title
     
     
-
 class Item(models.Model):
     def upload_image_to(instance, filename):   
         filename_base, filename_ext = os.path.splitext(filename)        
@@ -61,8 +57,6 @@ class Item(models.Model):
         on_delete = models.CASCADE,
         related_name = 'collection_items'
     )
-
-    # image = models.ImageField(upload_to="uploads/", editable=True, blank=True, null=True)
 
     image = models.ImageField(upload_to=upload_image_to, editable=True, blank=True, null=True)
     ranking = models.IntegerField(blank=True, null=True)
