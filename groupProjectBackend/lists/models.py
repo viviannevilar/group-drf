@@ -51,7 +51,7 @@ class Item(models.Model):
     attribute4 = models.CharField(max_length = 15,blank=True, null=True)
     price = models.DecimalField(decimal_places=2, max_digits=6,blank=True, null=True)
     sale_amount = models.IntegerField(blank=True, null=True)
-    sale_end_date = models.DateField()
+    sale_end_date = models.DateField(blank=True, null=True)
     notes = models.TextField(max_length = 100, blank=True)
     collection = models.ForeignKey(
         Collection,
