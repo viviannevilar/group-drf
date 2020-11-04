@@ -49,9 +49,7 @@ class CustomUserSerialiser(serializers.ModelSerializer):
         user.save()
         return user
 
-
-
-    
+   
 class ChangePasswordSerializer(serializers.Serializer):
     model = User
     """

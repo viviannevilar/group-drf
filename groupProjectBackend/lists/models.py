@@ -16,8 +16,7 @@ class Collection(models.Model):
     attribute2 = models.CharField(max_length = 15,blank=True, null=True)
     attribute3 = models.CharField(max_length = 15,blank=True, null=True)
     attribute4 = models.CharField(max_length = 15,blank=True, null=True)
-    attribute5 = models.CharField(max_length = 15,blank=True, null=True)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(
@@ -43,14 +42,16 @@ class Item(models.Model):
         return'uploads/%s_%s' % (filename_base, u.hex) 
 
     name = models.CharField(max_length= 30)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     attribute1 = models.CharField(max_length = 15,blank=True, null=True)
     attribute2 = models.CharField(max_length = 15,blank=True, null=True)
     attribute3 = models.CharField(max_length = 15,blank=True, null=True)
     attribute4 = models.CharField(max_length = 15,blank=True, null=True)
-    attribute5 = models.CharField(max_length = 15,blank=True, null=True)
+    price = models.DecimalField(decimal_places=2, max_digits=6,blank=True, null=True)
+    sale_amount = models.IntegerField(blank=True, null=True)
+    sale_end_date = models.DateField()
     notes = models.TextField(max_length = 100, blank=True)
     collection = models.ForeignKey(
         Collection,

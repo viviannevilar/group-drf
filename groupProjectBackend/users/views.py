@@ -27,7 +27,6 @@ class CustomUserList(APIView):
         return Response(serializer.data)
 
 
-
 class CustomUserDetail(APIView):
     permission_classes = [permissions.IsAuthenticated,
     OwnProfile]
@@ -74,7 +73,6 @@ class UserCreate(generics.CreateAPIView):
     """ url: users/register/ """
     queryset = User.objects.all()
     serializer_class = CustomUserSerialiser
-
 
 
 class ChangePasswordView(generics.UpdateAPIView):
