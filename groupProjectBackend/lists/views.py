@@ -14,7 +14,7 @@ from django.http import Http404
 
 class CollectionsList(generics.ListCreateAPIView):
     """ 
-    Shows all collections that aren't archived
+    Shows all collections
     url: collections/ 
     """
     serializer_class = CollectionSerialiser
@@ -43,7 +43,7 @@ class CollectionSafe(APIView):
 
 class CollectionsArchiveList(generics.ListAPIView):
     """ 
-    Shows all collections that aren't archived
+    Shows all collections that are archived
     url: collections/ 
     """
     serializer_class = CollectionSerialiser
@@ -58,7 +58,7 @@ class CollectionsArchiveList(generics.ListAPIView):
 
 class CollectionsActiveList(generics.ListAPIView):
     """ 
-    Shows all collections that aren't archived
+    Shows all collections that are active (not archived)
     url: collections/ 
     """
     serializer_class = CollectionSerialiser
@@ -108,7 +108,7 @@ class CollectionToggleArchive(APIView):
 
 class ItemsActiveList(generics.ListAPIView):
     """ 
-    Shows all lists that aren't archived
+    Shows all lists that are active (not archived)
     url: items/ 
     """
     serializer_class = ItemSerialiser
@@ -123,7 +123,7 @@ class ItemsActiveList(generics.ListAPIView):
 
 class ItemsArchiveList(generics.ListAPIView):
     """ 
-    Shows all lists that aren't archived
+    Shows all lists that are archived
     url: items/ 
     """
     serializer_class = ItemSerialiser
@@ -138,7 +138,7 @@ class ItemsArchiveList(generics.ListAPIView):
 
 class ItemsList(generics.ListCreateAPIView):
     """ 
-    Shows all lists that aren't archived
+    Shows all lists
     url: items/ 
     """
     serializer_class = ItemSerialiser

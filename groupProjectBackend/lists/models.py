@@ -10,17 +10,13 @@ import os
 User = get_user_model()
 
 
-
-
-
 class Collection(models.Model):
     title = models.CharField(max_length=30) 
     attribute1 = models.CharField(max_length = 15,blank=True, null=True)
     attribute2 = models.CharField(max_length = 15,blank=True, null=True)
     attribute3 = models.CharField(max_length = 15,blank=True, null=True)
     attribute4 = models.CharField(max_length = 15,blank=True, null=True)
-    attribute5 = models.CharField(max_length = 15,blank=True, null=True)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(
@@ -37,32 +33,32 @@ class Collection(models.Model):
     def __str__(self):
         return self.title
     
-
-
     
-
 class Item(models.Model):
     def upload_image_to(instance, filename):   
         filename_base, filename_ext = os.path.splitext(filename)        
-        print(os.path.splitext(filename))            
         u = uuid.uuid4()
-        return'posts/%s/%s' % (datetime.now().strftime("%Y%m%d"), u.hex) 
+        #datetime.now().strftime("%Y%m%d")
+        return'uploads/%s_%s' % (filename_base, u.hex) 
 
     name = models.CharField(max_length= 30)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     attribute1 = models.CharField(max_length = 15,blank=True, null=True)
     attribute2 = models.CharField(max_length = 15,blank=True, null=True)
     attribute3 = models.CharField(max_length = 15,blank=True, null=True)
     attribute4 = models.CharField(max_length = 15,blank=True, null=True)
-    attribute5 = models.CharField(max_length = 15,blank=True, null=True)
+    price = models.DecimalField(decimal_places=2, max_digits=6,blank=True, null=True)
+    sale_amount = models.IntegerField(blank=True, null=True)
+    sale_end_date = models.DateField(blank=True, null=True)
     notes = models.TextField(max_length = 100, blank=True)
     collection = models.ForeignKey(
         Collection,
         on_delete = models.CASCADE,
         related_name = 'collection_items'
     )
+
     image = models.ImageField(upload_to=upload_image_to, editable=True, blank=True, null=True)
     ranking = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(

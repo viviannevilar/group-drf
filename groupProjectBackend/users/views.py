@@ -27,7 +27,6 @@ class CustomUserList(APIView):
         return Response(serializer.data)
 
 
-
 class CustomUserDetail(APIView):
     permission_classes = [permissions.IsAuthenticated,
     OwnProfile]
@@ -37,6 +36,7 @@ class CustomUserDetail(APIView):
             return User.objects.get(username=username)
         except CustomUser.DoesNotExist:
             raise Http404
+
     def get(self, request, username):
         user = self.get_object(username)
         self.check_object_permissions(request, user)
@@ -75,12 +75,11 @@ class UserCreate(generics.CreateAPIView):
     serializer_class = CustomUserSerialiser
 
 
-
 class ChangePasswordView(generics.UpdateAPIView):
     """An endpoint for changing password."""
     serializer_class = ChangePasswordSerializer
     model = User
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,OwnProfile)
 
     def get_object(self, queryset=None):
         obj = self.request.user
