@@ -21,6 +21,7 @@ class CustomUserList(APIView):
     serializer_class = CustomUserSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, HTMLFormRenderer)
     permission_classes = [IsAdminUser,]
+    
     def get(self, request):
         users = User.objects.all()
         serializer = CustomUserSerializer(users, many=True)

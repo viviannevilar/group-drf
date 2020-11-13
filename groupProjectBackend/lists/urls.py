@@ -14,6 +14,7 @@ urlpatterns = [
     path('archived-items/', views.ItemsArchiveList.as_view()),
     path('item/<int:pk>/', views.ItemDetail.as_view()),
     path('item/<int:pk>/archive/', views.ItemToggleArchive.as_view()),
+    path('collection/<int:pk>/ranking/', views.CollectionRankingView.as_view()),
     #path('collection/<int:pk>/sort/', views.CollectionSort.as_view())
 
 ]
