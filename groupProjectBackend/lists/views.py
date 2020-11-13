@@ -184,3 +184,14 @@ class ItemToggleArchive(APIView):
             response = "item unarchived"
         item.save()
         return Response({'status': response})
+
+
+# class CollectionSort(APIView):
+#    queryset = Collection.objects.all()
+#    permission_classes = [IsAuthenticated, IsOwner]
+
+#    def get_object(self, pk):
+#       try:
+#          return Collection.objects.get(pk=pk)
+#       except Collection.DoesNotExist:
+#          raise Http404

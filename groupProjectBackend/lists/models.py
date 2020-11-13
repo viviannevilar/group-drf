@@ -19,6 +19,7 @@ class Collection(models.Model):
     is_active = models.BooleanField(default=True)
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    ranking = models.ManyToManyField(Item, related_name='items_ranking', through="Ranking")
     user = models.ForeignKey(
         User,
         on_delete = models.CASCADE,
@@ -66,3 +67,20 @@ class Item(models.Model):
         on_delete = models.CASCADE,
         related_name = 'owner_items',
     )
+
+
+class Ranking(models.Model):
+   collection = models.ForeignKey(
+      Collection,
+      on_delete = models.CASCADE,
+      related_name = "ranking_collections"
+   )
+   item = models.ForeignKey(
+      Item,
+      on_delete=models.CASCADE,
+      related_name = "ranking_items"
+   )
+   rank = models.IntegerField(blank=True, null=True)
+      
+   class Meta:
+      unique_together = ('collection', 'item')

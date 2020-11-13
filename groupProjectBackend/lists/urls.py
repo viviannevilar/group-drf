@@ -10,10 +10,11 @@ urlpatterns = [
     path('collection/<int:pk>/', views.CollectionDetail.as_view()),
     path('collection/<int:pk>/archive/', views.CollectionToggleArchive.as_view()),
     path('items/', views.ItemsList.as_view()),
-    path('item/<int:pk>/', views.ItemDetail.as_view()),
     path('active-items/', views.ItemsActiveList.as_view()),
     path('archived-items/', views.ItemsArchiveList.as_view()),
+    path('item/<int:pk>/', views.ItemDetail.as_view()),
     path('item/<int:pk>/archive/', views.ItemToggleArchive.as_view()),
+    #path('collection/<int:pk>/sort/', views.CollectionSort.as_view())
 
 ]
 
