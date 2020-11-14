@@ -78,7 +78,7 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
    """
    queryset = Collection.objects.all()
    serializer_class = CollectionDetailSerialiser
-   permission_classes = [IsOwner, IsAuthenticated, ]
+   permission_classes = [IsAuthenticated, IsOwner,  ]
 
 
 class CollectionToggleArchive(APIView):
