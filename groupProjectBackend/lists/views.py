@@ -213,7 +213,7 @@ class CollectionRankingView(APIView):
       for (idx, item_pk) in enumerate(rev_array):
          Item.objects.filter(pk=item_pk).update(ranking=(len(array) - 1 - idx))
       
-      return Response({'statusText': "Order saved!", 'ok': true})
+      return Response({'statusText': "Order saved!", 'ok': True})
 
 
 
