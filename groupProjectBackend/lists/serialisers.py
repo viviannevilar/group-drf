@@ -35,5 +35,11 @@ class CollectionDetailSerialiser(CollectionSerialiser):
 
 
 
+class CollectionSimpleDetailSerialiser(serializers.ModelSerializer):
+   user = serializers.ReadOnlyField(source='user.username')
+   date_created = serializers.ReadOnlyField()
+   last_updated = serializers.ReadOnlyField()
 
-
+   class Meta:
+      model = Collection
+      fields = ['user','id', 'title', 'attribute1', 'attribute2', 'attribute3','attribute4','is_active', 'date_created', 'last_updated']

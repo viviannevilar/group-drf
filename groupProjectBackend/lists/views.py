@@ -7,6 +7,7 @@ from .models import Collection, Item
 from .serialisers import (
    CollectionSerialiser,
    CollectionDetailSerialiser,
+   CollectionSimpleDetailSerialiser,
    ItemSerialiser,
    )
 from django.core.signing import BadSignature
@@ -80,6 +81,13 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
    serializer_class = CollectionDetailSerialiser
    permission_classes = [IsAuthenticated, IsOwner,  ]
 
+class CollectionSimpleDetail(generics.RetrieveAPIView):
+   """ 
+   url: collection/simple/<int:pk>/
+   """
+   queryset = Collection.objects.all()
+   serializer_class = CollectionSimpleDetailSerialiser
+   permission_classes = [IsAuthenticated, IsOwner,  ]
 
 class CollectionToggleArchive(APIView):
    "archive or unarchive collection"

@@ -8,6 +8,7 @@ urlpatterns = [
     path('archived-collections/', views.CollectionsArchiveList.as_view()),
     path('active-collections/', views.CollectionsActiveList.as_view()),    
     path('collection/<int:pk>/', views.CollectionDetail.as_view()),
+    path('collection/simple/<int:pk>/', views.CollectionSimpleDetail.as_view()),
     path('collection/<int:pk>/archive/', views.CollectionToggleArchive.as_view()),
     path('items/', views.ItemsList.as_view()),
     path('active-items/', views.ItemsActiveList.as_view()),
