@@ -165,7 +165,7 @@ class ItemToggleArchive(APIView):
    "archive or unarchive item"
 
    queryset = Item.objects.all()
-   permission_classes = [IsAuthenticated, IsOwner]
+   permission_classes = [IsAuthenticated, IsOwner, ]
 
    def get_object(self, pk):
       try:
@@ -213,7 +213,7 @@ class CollectionRankingView(APIView):
       for (idx, item_pk) in enumerate(rev_array):
          Item.objects.filter(pk=item_pk).update(ranking=(len(array) - 1 - idx))
       
-      return Response("check")
+      return Response({'statusText': "Order saved!", 'ok': true})
 
 
 
