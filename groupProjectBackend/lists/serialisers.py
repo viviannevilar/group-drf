@@ -17,6 +17,7 @@ class ItemSerialiser(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     date_created = serializers.ReadOnlyField()
     last_updated = serializers.ReadOnlyField()
+    is_active = serializers.ReadOnlyField()
 
     class Meta:
         model = Item
