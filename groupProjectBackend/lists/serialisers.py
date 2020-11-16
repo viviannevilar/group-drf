@@ -26,6 +26,7 @@ class ItemSerialiser(serializers.ModelSerializer):
 
 class CollectionDetailSerialiser(CollectionSerialiser):
    collection_items = serializers.SerializerMethodField()
+   is_active = serializers.ReadOnlyField()
 
    # overrides the default method to get the items for a collection
    # because I want to order it in a different way
