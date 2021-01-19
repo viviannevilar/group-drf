@@ -10,15 +10,15 @@ urlpatterns = [
     path('collection/<int:pk>/', views.CollectionDetail.as_view()),
     path('collection/simple/<int:pk>/', views.CollectionSimpleDetail.as_view()),
     path('collection/<int:pk>/archive/', views.CollectionToggleArchive.as_view()),
-    path('items/', views.ItemsList.as_view()),
+    # path('items/', views.ItemsList.as_view()),
+    path('item/<int:collection>/<int:pk>/', views.ItemCollectionDetail.as_view()),
     path('active-items/', views.ItemsActiveList.as_view()),
     path('archived-items/', views.ItemsArchiveList.as_view()),
-    path('item/<int:pk>/', views.ItemDetail.as_view()),
-    path('item/<int:pk>/archive/', views.ItemToggleArchive.as_view()),
+    # path('item/<int:pk>/', views.ItemDetail.as_view()),
+    path('item/<int:collection>/<int:pk>/archive/', views.ItemToggleArchive.as_view()),
     path('collection/<int:pk>/ranking/', views.CollectionRankingView.as_view()),
+    path('collection/<int:pk>/add_user/', views.CollectionShare.as_view()),
+    path('collection/<int:collection>/items/', views.CollectionItemsCreate.as_view()),
     #path('collection/<int:pk>/sort/', views.CollectionSort.as_view())
 
 ]
-
-
-

@@ -15,8 +15,9 @@ class CollectionAdmin(admin.ModelAdmin):
     model = Collection
     list_display = ['title','id','user','is_active','date_created','attribute1','attribute2', 'attribute3', 'attribute4']
     list_filter = ('is_active','user')
-    fields = ('title','user','is_active','attribute1','attribute2', 'attribute3', 'attribute4','date_created','last_updated',)
+    fields = ('title','user','is_active','attribute1','attribute2', 'attribute3', 'attribute4','date_created','last_updated','allowed_users',)
     readonly_fields = ('last_updated','date_created')
+    filter_horizontal = ('allowed_users',)
 
 
 

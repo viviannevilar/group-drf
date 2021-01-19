@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.conf import settings
 import uuid
 from datetime import datetime
 from django.core.signing import Signer
@@ -21,11 +22,13 @@ class Collection(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     #ranking = models.ManyToManyField('Item', related_name='items_ranking',)
     user = models.ForeignKey(
-        User,
-        on_delete = models.CASCADE,
-        related_name = 'owner_collections',
+      User,
+      on_delete = models.CASCADE,
+      related_name = 'owner_collections',
     )
     signer = Signer(sep='/', salt='collection')
+    allowed_users = models.ManyToManyField(settings.AUTH_USER_MODEL, 
+      related_name='shared_collections')
 
     @property
     def signed_pk(self):
@@ -50,7 +53,7 @@ class Item(models.Model):
     attribute2 = models.CharField(max_length = 15,blank=True, null=True)
     attribute3 = models.CharField(max_length = 15,blank=True, null=True)
     attribute4 = models.CharField(max_length = 15,blank=True, null=True)
-    price = models.DecimalField(decimal_places=2, max_digits=6,blank=True, null=True)
+    price = models.DecimalField(decimal_places=2, max_digits=6, blank=True, null=True)
     sale_amount = models.IntegerField(blank=True, null=True)
     sale_end_date = models.DateField(blank=True, null=True)
     notes = models.TextField(max_length = 100, blank=True)
