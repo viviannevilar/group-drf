@@ -239,16 +239,19 @@ class CollectionShare(APIView):
 
 ############################################
 
-class CollectionItemsCreate(generics.CreateAPIView):
-   """ 
-   Create items in a collection; needs to be collection owner or have owner's permission
-   url: collection/<int:collection>/items/ 
-   """
-   serializer_class = ItemSerialiser
-   permission_classes = [IsAuthenticated, IsOwnerCollectionOrHasPermission, ]
+class CollectionItemsCreate(generics.ListCreateAPIView):
+  """ 
+  Create items in a collection; needs to be collection owner or have owner's permission
+  url: collection/<int:collection>/items/ 
+  """
+  serializer_class = ItemSerialiser
+  permission_classes = [IsAuthenticated, IsOwnerCollectionOrHasPermission, ]
 
-   def perform_create(self, serializer):
-      serializer.save(user=self.request.user)
+  def get_queryset(self):
+    return Item.objects.filter(collection=self.kwargs['collection'])
+
+  def perform_create(self, serializer):
+    serializer.save(user=self.request.user)
 
 
 class ItemCollectionDetail(generics.RetrieveUpdateDestroyAPIView):
