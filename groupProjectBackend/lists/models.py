@@ -28,7 +28,7 @@ class Collection(models.Model):
     )
     signer = Signer(sep='/', salt='collection')
     allowed_users = models.ManyToManyField(settings.AUTH_USER_MODEL, 
-      related_name='shared_collections')
+      related_name='shared_collections', blank=True)
 
     @property
     def signed_pk(self):
