@@ -20,7 +20,11 @@ class HasOwnerPermissionOrIsOwner(permissions.BasePermission):
 
 class IsOwnerCollectionOrHasPermission(permissions.BasePermission):
   def has_permission(self, request, view):
-    collection = Collection.objects.get(pk=view.kwargs['collection'])
+    try:
+      collectionID = view.kwargs['collection']
+    except:
+      collectionID = view.kwargs['pk']
+    collection = Collection.objects.get(pk=collectionID)
     return collection.allowed_users.filter(id=request.user.id).exists() or collection.user == request.user
 
 

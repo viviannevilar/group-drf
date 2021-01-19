@@ -69,18 +69,20 @@ class CollectionsArchiveList(generics.ListAPIView):
 
 
 class CollectionsActiveList(generics.ListAPIView):
-   """ 
-   Shows all collections that are active (not archived)
-   url: active-collections/ 
-   """
-   serializer_class = CollectionSerialiser
-   permission_classes = [IsAuthenticated, IsOwner, ]
+  """ 
+  Shows all collections that are active (not archived)
+  url: active-collections/ 
+  """
+  serializer_class = CollectionSerialiser
+  permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner, ]
 
-   def get_queryset(self):
-      return Collection.objects.filter(user=self.request.user, is_active=True)
+  def get_queryset(self):
+    my_queryset = Collection.objects.filter(user=self.request.user, is_active=True) | Collection.objects.filter(allowed_users__in = [self.request.user.id], is_active=True)
+    return my_queryset.distinct()
 
-   def perform_create(self, serializer):
-      serializer.save(user=self.request.user)
+  # def get_queryset(self):
+  #   return Collection.objects.filter(user=self.request.user, is_active=True)
+
 
 
 class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
