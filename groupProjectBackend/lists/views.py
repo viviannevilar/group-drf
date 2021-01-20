@@ -138,8 +138,8 @@ class ItemsActiveList(generics.ListAPIView):
    def get_queryset(self):
       return Item.objects.filter(user=self.request.user, is_active=True)
 
-   def perform_create(self, serializer):
-      serializer.save(user=self.request.user)
+  #  def perform_create(self, serializer):
+  #     serializer.save(user=self.request.user)
 
 
 class ItemsArchiveList(generics.ListAPIView):
@@ -233,13 +233,13 @@ class CollectionShare(APIView):
       print(f"user: ", {user.id})
       print(collection.allowed_users.filter(id=user.id).exists() == True)
       if collection.allowed_users.filter(id=user.id).exists() == True:
-        response = "user already has permission!"
+        response = f"you have already shared this collection with {username}!"
       else:
         collection.allowed_users.add(user)
         response = f"user {username} can now edit this collection!"
         collection.save()
     except:
-      response = "username is invalid!"
+      response = "this username is invalid!"
     
     return Response({'status': response})
 
