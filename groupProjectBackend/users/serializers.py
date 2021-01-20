@@ -58,3 +58,10 @@ class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
 
+
+#this is the one being used to create users
+class UserShareSerialiser(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['username',]

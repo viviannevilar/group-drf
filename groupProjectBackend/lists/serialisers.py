@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Collection, Item
 from django.db.models import F 
+from users.serializers import UserShareSerialiser
 
 class CollectionSerialiser(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
@@ -47,3 +48,12 @@ class CollectionSimpleDetailSerialiser(serializers.ModelSerializer):
    class Meta:
       model = Collection
       fields = ['user','id', 'title', 'attribute1', 'attribute2', 'attribute3','attribute4','is_active', 'date_created', 'last_updated']
+
+
+class CollectionSharedSerialiser(serializers.ModelSerializer):
+  allowed_users = UserShareSerialiser(many=True, read_only=True)
+  user = serializers.ReadOnlyField(source='user.username')
+
+  class Meta:
+    model = Collection
+    fields = ['user', 'id', 'title', 'allowed_users']

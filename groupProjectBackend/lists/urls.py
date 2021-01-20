@@ -19,6 +19,7 @@ urlpatterns = [
     path('collection/<int:pk>/ranking/', views.CollectionRankingView.as_view()),
     path('collection/<int:pk>/add_user/', views.CollectionShare.as_view()),
     path('collection/<int:collection>/items/', views.CollectionItemsCreate.as_view()),
+    path('collection/<int:pk>/allowed_users/', views.CollectionSharedUsers.as_view()),
     #path('collection/<int:pk>/sort/', views.CollectionSort.as_view())
 
 ]

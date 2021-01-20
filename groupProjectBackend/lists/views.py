@@ -9,6 +9,7 @@ from .serialisers import (
    CollectionDetailSerialiser,
    CollectionSimpleDetailSerialiser,
    ItemSerialiser,
+   CollectionSharedSerialiser
    )
 from django.core.signing import BadSignature
 from django.http import Http404
@@ -64,8 +65,6 @@ class CollectionsArchiveList(generics.ListAPIView):
   #  def get_queryset(self):
   #     return Collection.objects.filter(user=self.request.user, is_active=False)
 
-  # def perform_create(self, serializer):
-  #   serializer.save(user=self.request.user)
 
 
 class CollectionsActiveList(generics.ListAPIView):
@@ -83,6 +82,11 @@ class CollectionsActiveList(generics.ListAPIView):
   # def get_queryset(self):
   #   return Collection.objects.filter(user=self.request.user, is_active=True)
 
+
+class CollectionSharedUsers(generics.RetrieveAPIView):
+  queryset = Collection.objects.all()
+  serializer_class = CollectionSharedSerialiser
+  permission_classes = [IsAuthenticated, IsOwner, ]
 
 
 class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
