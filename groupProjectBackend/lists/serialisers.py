@@ -4,29 +4,48 @@ from django.db.models import F
 from users.serializers import UserShareSerialiser
 
 class CollectionSerialiser(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username')
-    date_created = serializers.ReadOnlyField()
-    last_updated = serializers.ReadOnlyField()
-    signed_pk = serializers.ReadOnlyField()
+  ''' used by the following views:
+  - CollectionsList: collections/
+  - CollectionsArchiveList: archived-collections/
+  - CollectionsActiveList: active-collections/
+  - 
 
-    class Meta:
-        model = Collection
-        exclude = ['allowed_users', ]
-        # fields = '__all__'
+  '''
+  user = serializers.ReadOnlyField(source='user.username')
+  date_created = serializers.ReadOnlyField()
+  last_updated = serializers.ReadOnlyField()
+  signed_pk = serializers.ReadOnlyField()
+
+  class Meta:
+    model = Collection
+    exclude = ['allowed_users', ]
+    # fields = '__all__'
 
 
 class ItemSerialiser(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username')
-    date_created = serializers.ReadOnlyField()
-    last_updated = serializers.ReadOnlyField()
-    is_active = serializers.ReadOnlyField()
+  ''' used by the following views:
+  - ItemsActiveList:       active-items/
+  - ItemsArchiveList:      archived-items/
+  - CollectionItemsCreate: collection/<int:collection>/items/
+  - ItemCollectionDetail:  item/<int:collection>/<int:pk>/
 
-    class Meta:
-        model = Item
-        fields = '__all__'
+  '''
+  user = serializers.ReadOnlyField(source='user.username')
+  date_created = serializers.ReadOnlyField()
+  last_updated = serializers.ReadOnlyField()
+  is_active = serializers.ReadOnlyField()
+
+  class Meta:
+    model = Item
+    fields = '__all__'
 
 
 class CollectionDetailSerialiser(CollectionSerialiser):
+  ''' used by the following views:
+  - CollectionSafe: collection/safe/<signed_pk>/
+  - CollectionDetail: collection/<int:pk>/
+
+  '''
   collection_items = serializers.SerializerMethodField()
   is_active = serializers.ReadOnlyField()
 
@@ -38,19 +57,25 @@ class CollectionDetailSerialiser(CollectionSerialiser):
     return ItemSerialiser(items,many=True).data
 
 
-
 class CollectionSimpleDetailSerialiser(serializers.ModelSerializer):
-   user = serializers.ReadOnlyField(source='user.username')
-   date_created = serializers.ReadOnlyField()
-   last_updated = serializers.ReadOnlyField()
+  ''' used by the following views:
+  - CollectionSimpleDetail: collection/simple/<int:pk>/
+  - 
+  '''
+  user = serializers.ReadOnlyField(source='user.username')
+  date_created = serializers.ReadOnlyField()
+  last_updated = serializers.ReadOnlyField()
 
-
-   class Meta:
-      model = Collection
-      fields = ['user','id', 'title', 'attribute1', 'attribute2', 'attribute3','attribute4','is_active', 'date_created', 'last_updated']
+  class Meta:
+    model = Collection
+    fields = ['user','id', 'title', 'attribute1', 'attribute2', 'attribute3','attribute4','is_active', 'date_created', 'last_updated']
 
 
 class CollectionSharedSerialiser(serializers.ModelSerializer):
+  ''' used by the following views:
+  - CollectionSharedUsers: collection/<int:pk>/allowed_users/
+
+  '''
   allowed_users = UserShareSerialiser(many=True, read_only=True)
   user = serializers.ReadOnlyField(source='user.username')
 

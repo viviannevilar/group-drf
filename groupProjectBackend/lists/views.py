@@ -5,12 +5,12 @@ from rest_framework.response import Response
 from .permissions import IsOwner, HasOwnerPermissionOrIsOwner, IsOwnerCollectionOrHasPermission
 from .models import Collection, Item
 from .serialisers import (
-   CollectionSerialiser,
-   CollectionDetailSerialiser,
-   CollectionSimpleDetailSerialiser,
-   ItemSerialiser,
-   CollectionSharedSerialiser
-   )
+  CollectionSerialiser,
+  CollectionDetailSerialiser,
+  CollectionSimpleDetailSerialiser,
+  ItemSerialiser,
+  CollectionSharedSerialiser
+  )
 from django.core.signing import BadSignature
 from django.http import Http404
 from django.contrib.auth import get_user_model
@@ -33,21 +33,6 @@ class CollectionsList(generics.ListCreateAPIView):
   def perform_create(self, serializer):
     serializer.save(user=self.request.user)
 
-class CollectionSafe(APIView):
-  # view someone else's collection that they shared with a link 
-
-   def get_object(self, signed_pk):
-      try:
-         pk = Collection.signer.unsign(signed_pk)
-         return Collection.objects.get(pk=pk)
-      except (BadSignature, Collection.DoesNotExist):
-         raise Http404('No collection matches the given query')
-   
-   def get(self, request, signed_pk):
-      collection = self.get_object(signed_pk)
-      serializer = CollectionDetailSerialiser(collection)
-      return Response(serializer.data)
-
 
 class CollectionsArchiveList(generics.ListAPIView):
   """ 
@@ -57,14 +42,12 @@ class CollectionsArchiveList(generics.ListAPIView):
   serializer_class = CollectionSerialiser
   permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner, ]
 
-
   def get_queryset(self):
     my_queryset = Collection.objects.filter(user=self.request.user, is_active=False) | Collection.objects.filter(allowed_users__in = [self.request.user.id], is_active=False)
     return my_queryset.distinct()
 
   #  def get_queryset(self):
   #     return Collection.objects.filter(user=self.request.user, is_active=False)
-
 
 
 class CollectionsActiveList(generics.ListAPIView):
@@ -83,105 +66,125 @@ class CollectionsActiveList(generics.ListAPIView):
   #   return Collection.objects.filter(user=self.request.user, is_active=True)
 
 
+class CollectionSafe(APIView):
+  # view someone else's collection that they shared with a link 
+  # uses CollectionDetailSerialiser
+
+  def get_object(self, signed_pk):
+    try:
+      pk = Collection.signer.unsign(signed_pk)
+      return Collection.objects.get(pk=pk)
+    except (BadSignature, Collection.DoesNotExist):
+      raise Http404('No collection matches the given query')
+  
+  def get(self, request, signed_pk):
+    collection = self.get_object(signed_pk)
+    serializer = CollectionDetailSerialiser(collection)
+    return Response(serializer.data)  
+
+
 class CollectionSharedUsers(generics.RetrieveAPIView):
+  '''
+  url: collection/<int:pk>/allowed_users/
+  '''
   queryset = Collection.objects.all()
   serializer_class = CollectionSharedSerialiser
   permission_classes = [IsAuthenticated, IsOwner, ]
 
 
 class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
-   """ 
-   url: collection/<int:pk>/
-   """
-   queryset = Collection.objects.all()
-   serializer_class = CollectionDetailSerialiser
-   permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner,  ]
+  """ 
+  url: collection/<int:pk>/
+  """
+  queryset = Collection.objects.all()
+  serializer_class = CollectionDetailSerialiser
+  permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner,  ]
 
 class CollectionSimpleDetail(generics.RetrieveAPIView):
-   """ 
-   url: collection/simple/<int:pk>/
-   """
-   queryset = Collection.objects.all()
-   serializer_class = CollectionSimpleDetailSerialiser
-   permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner, ]
+  """ 
+  url: collection/simple/<int:pk>/
+  """
+  queryset = Collection.objects.all()
+  serializer_class = CollectionSimpleDetailSerialiser
+  permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner, ]
 
 class CollectionToggleArchive(APIView):
-   "archive or unarchive collection"
+  "archive or unarchive collection"
 
-   queryset = Collection.objects.all()
-   permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner,]
+  queryset = Collection.objects.all()
+  permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner,]
 
-   def get_object(self, pk):
-      try:
-         return Collection.objects.get(pk=pk)
-      except Collection.DoesNotExist:
-         raise Http404
+  def get_object(self, pk):
+    try:
+      return Collection.objects.get(pk=pk)
+    except Collection.DoesNotExist:
+      raise Http404
 
-   def post(self, request, pk):
-      collection = self.get_object(pk)
-      self.check_object_permissions(request, collection)        
-      data = request.data
-      if collection.is_active == True:
-         collection.is_active = False
-         response = "collection unarchived!"
-      else:
-         collection.is_active = True
-         response = "collection archived"
-      collection.save()
-      return Response({'status': response})
+  def post(self, request, pk):
+    collection = self.get_object(pk)
+    self.check_object_permissions(request, collection)        
+    data = request.data
+    if collection.is_active == True:
+      collection.is_active = False
+      response = "collection unarchived!"
+    else:
+      collection.is_active = True
+      response = "collection archived"
+    collection.save()
+    return Response({'status': response})
 
 
 class ItemsActiveList(generics.ListAPIView):
-   """ 
-   Shows all lists that are active (not archived)
-   url: items/ 
-   """
-   serializer_class = ItemSerialiser
-   permission_classes = [IsAuthenticated, IsOwner,]
+  """ 
+  Shows all lists that are active (not archived)
+  url: items/ 
+  """
+  serializer_class = ItemSerialiser
+  permission_classes = [IsAuthenticated, IsOwner,]
 
-   def get_queryset(self):
-      return Item.objects.filter(user=self.request.user, is_active=True)
+  def get_queryset(self):
+    return Item.objects.filter(user=self.request.user, is_active=True)
 
   #  def perform_create(self, serializer):
   #     serializer.save(user=self.request.user)
 
 
 class ItemsArchiveList(generics.ListAPIView):
-   """ 
-   Shows all lists that are archived
-   url: items/ 
-   """
-   serializer_class = ItemSerialiser
-   permission_classes = [IsAuthenticated, IsOwner,]
+  """ 
+  Shows all lists that are archived
+  url: items/ 
+  """
+  serializer_class = ItemSerialiser
+  permission_classes = [IsAuthenticated, IsOwner,]
 
-   def get_queryset(self):
-      return Item.objects.filter(user=self.request.user, is_active=False)
+  def get_queryset(self):
+    return Item.objects.filter(user=self.request.user, is_active=False)
 
 
 class ItemToggleArchive(APIView):
-   "archive or unarchive item"
+  "archive or unarchive item"
 
-   queryset = Item.objects.all()
-   permission_classes = [IsAuthenticated, IsOwnerCollectionOrHasPermission, ]
+  queryset = Item.objects.all()
+  permission_classes = [IsAuthenticated, IsOwnerCollectionOrHasPermission, ]
 
-   def get_object(self, pk, **kwargs):
-      try:
-         return Item.objects.get(pk=pk)
-      except Item.DoesNotExist:
-         raise Http404
+  def get_object(self, pk, **kwargs):
+    try:
+      return Item.objects.get(pk=pk)
+    except Item.DoesNotExist:
+      raise Http404
 
-   def post(self, request, pk, **kwargs):
-      item = self.get_object(pk)
-      self.check_object_permissions(request, item)  
-      data = request.data
-      if item.is_active == True:
-         item.is_active = False
-         response = "item archived!"
-      else:
-         item.is_active = True
-         response = "item unarchived"
-      item.save()
-      return Response({'status': response})
+  def post(self, request, pk, **kwargs):
+    item = self.get_object(pk)
+    self.check_object_permissions(request, item)  
+    data = request.data
+    if item.is_active == True:
+      item.is_active = False
+      response = "item archived!"
+    else:
+      item.is_active = True
+      response = "item unarchived"
+    item.save()
+    return Response({'status': response})
 
 
 class CollectionRankingView(APIView):
@@ -266,16 +269,19 @@ class CollectionItemsCreate(generics.ListCreateAPIView):
 
 
 class ItemCollectionDetail(generics.RetrieveUpdateDestroyAPIView):
-   """ 
-   url: item/<int:collection>/<int:pk>/
-   """
-   queryset = Item.objects.all()
-   serializer_class = ItemSerialiser
-   permission_classes = [IsAuthenticated, IsOwnerCollectionOrHasPermission,]
+  """ 
+  url: item/<int:collection>/<int:pk>/
+  """
+  queryset = Item.objects.all()
+  serializer_class = ItemSerialiser
+  permission_classes = [IsAuthenticated, IsOwnerCollectionOrHasPermission,]
 
 
 # those are old views which didn't have good permissions. 
-# replaced by the ones above
+# replaced by the onesx above
+# ItemsList replaced by CollectionItemsCreate
+# ItemDetail replaced by ItemCollectionDetail
+
 # class ItemsList(generics.ListCreateAPIView):
 #    """ 
 #    Shows all lists
