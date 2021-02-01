@@ -17,6 +17,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+#################### Collections ####################
 
 class CollectionsList(generics.ListCreateAPIView):
   """ 
@@ -67,9 +68,11 @@ class CollectionsActiveList(generics.ListAPIView):
 
 
 class CollectionSafe(APIView):
-  # view someone else's collection that they shared with a link 
-  # uses CollectionDetailSerialiser
-
+  ''' 
+  view someone else's collection that they shared with a link 
+  uses CollectionDetailSerialiser 
+  url: collection/safe/<signed_pk>/
+  '''
   def get_object(self, signed_pk):
     try:
       pk = Collection.signer.unsign(signed_pk)
@@ -85,6 +88,7 @@ class CollectionSafe(APIView):
 
 class CollectionSharedUsers(generics.RetrieveAPIView):
   '''
+  to see users that are allowed
   url: collection/<int:pk>/allowed_users/
   '''
   queryset = Collection.objects.all()
@@ -100,6 +104,7 @@ class CollectionDetail(generics.RetrieveUpdateDestroyAPIView):
   serializer_class = CollectionDetailSerialiser
   permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner,  ]
 
+
 class CollectionSimpleDetail(generics.RetrieveAPIView):
   """ 
   url: collection/simple/<int:pk>/
@@ -108,9 +113,11 @@ class CollectionSimpleDetail(generics.RetrieveAPIView):
   serializer_class = CollectionSimpleDetailSerialiser
   permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner, ]
 
-class CollectionToggleArchive(APIView):
-  "archive or unarchive collection"
 
+class CollectionToggleArchive(APIView):
+  """
+  archive or unarchive collection
+  """
   queryset = Collection.objects.all()
   permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner,]
 
@@ -145,9 +152,6 @@ class ItemsActiveList(generics.ListAPIView):
   def get_queryset(self):
     return Item.objects.filter(user=self.request.user, is_active=True)
 
-  #  def perform_create(self, serializer):
-  #     serializer.save(user=self.request.user)
-
 
 class ItemsArchiveList(generics.ListAPIView):
   """ 
@@ -162,8 +166,9 @@ class ItemsArchiveList(generics.ListAPIView):
 
 
 class ItemToggleArchive(APIView):
-  "archive or unarchive item"
-
+  '''
+  archive or unarchive item
+  '''
   queryset = Item.objects.all()
   permission_classes = [IsAuthenticated, IsOwnerCollectionOrHasPermission, ]
 
@@ -191,24 +196,18 @@ class CollectionRankingView(APIView):
   """
   shows the custom ranking of items in a collection
   """
-
-  #serializer_class = RankingSerialiser
   permission_classes = [IsAuthenticated, HasOwnerPermissionOrIsOwner,]
 
   def post(self, request, pk):
     collection_pk = request.data['collection_id']
-
     items = Item.objects.filter(collection__pk=collection_pk)
     print(f"items: {items}")
     
-    array = request.data['ranking']
-
     # get reverse of array so that the first item is the last one updated
     # this because date modified is the default version that django lists
     # the items
+    array = request.data['ranking']
     rev_array= array[::-1]
-    print(f"array: {array}")
-    print(f"reverse array: {rev_array}")
 
     for (idx, item_pk) in enumerate(rev_array):
       Item.objects.filter(pk=item_pk).update(ranking=(len(array) - 1 - idx))
@@ -217,8 +216,10 @@ class CollectionRankingView(APIView):
 
 
 class CollectionShare(APIView):
-  "give another user permission to edit collection"
-
+  """
+  give another user permission to edit collection
+  url: collection/<int:pk>/add_user/
+  """
   queryset = Collection.objects.all()
   permission_classes = [IsAuthenticated, IsOwner, ]
 
@@ -232,13 +233,12 @@ class CollectionShare(APIView):
     collection = self.get_object(pk)
     self.check_object_permissions(request, collection)  
     username = request.data['username']
-    print(f"username: {username}")
+    # print(f"username: {username}")
 
     try:
       user = User.objects.get(username=username)
-
-      print(f"user: ", {user.id})
-      print(collection.allowed_users.filter(id=user.id).exists() == True)
+      # print(f"user: ", {user.id})
+      # print(collection.allowed_users.filter(id=user.id).exists() == True)
       if collection.allowed_users.filter(id=user.id).exists() == True:
         response = f"you have already shared this collection with {username}!"
       else:
@@ -251,8 +251,43 @@ class CollectionShare(APIView):
     return Response({'status': response})
 
 
-############################################
+class CollectionUnshare(APIView):
+  """
+  remove another user's permission to edit collection
+  url: collection/<int:pk>/remove_user/
+  """
+  queryset = Collection.objects.all()
+  permission_classes = [IsAuthenticated, IsOwner, ]
 
+  def get_object(self, pk):
+    try:
+      return Collection.objects.get(pk=pk)
+    except Collection.DoesNotExist:
+      raise Http404
+
+  def post(self, request, pk):
+    collection = self.get_object(pk)
+    self.check_object_permissions(request, collection)  
+    username = request.data['username']
+    # print(f"username: {username}")
+
+    try:
+      user = User.objects.get(username=username)
+      # print(f"user: ", {user.id})
+      # print(collection.allowed_users.filter(id=user.id).exists() == True)
+      if collection.allowed_users.filter(id=user.id).exists() == True:
+        collection.allowed_users.remove(user)
+        response = f"user {username} no longer has permission to edit this collection!"
+        collection.save()
+      else:
+       response = f"User {username} can't be removed as they currently don't have permission!"
+    except:
+      response = "this username is invalid!"
+    
+    return Response({'status': response})
+
+
+############################################
 class CollectionItemsCreate(generics.ListCreateAPIView):
   """ 
   Create items in a collection; needs to be collection owner or have owner's permission
@@ -275,6 +310,8 @@ class ItemCollectionDetail(generics.RetrieveUpdateDestroyAPIView):
   queryset = Item.objects.all()
   serializer_class = ItemSerialiser
   permission_classes = [IsAuthenticated, IsOwnerCollectionOrHasPermission,]
+
+
 
 
 # those are old views which didn't have good permissions. 
